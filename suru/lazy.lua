@@ -64,13 +64,37 @@ require("lazy").setup({
 	},	
 	{
         	"nvim-telescope/telescope.nvim",
+            config = function()
+                require('telescope').setup({})
+                local builtin = require('telescope.builtin')
+                vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
+                vim.keymap.set('n', '<leader>pg', builtin.git_files, {})
+                vim.keymap.set('n', '<leader>ps', function()
+                    builtin.grep_string({ search = vim.fn.input("Grep > ") })
+                end)
+            end,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
 	"nvim-treesitter/playground",
-	"theprimeagen/harpoon",
+    {
+        "theprimeagen/harpoon",
+        config = function()
+            require('harpoon').setup({})
+            local mark = require("harpoon.mark")
+            local ui = require("harpoon.ui")
+
+            vim.keymap.set("n", "<leader>a", mark.add_file)
+            vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+
+            vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+            vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
+            vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+            vim.keymap.set("n", "<C-o>", function() ui.nav_file(4) end)
+        end,
+    },
     {
         "folke/trouble.nvim",
         config = function()
@@ -79,6 +103,8 @@ require("lazy").setup({
             }
         end
     },
+    "mbbill/undotree",
+
     --"zenmode/folke"
     --"github-copilot"
 })
