@@ -1,17 +1,17 @@
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out, "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -55,30 +55,30 @@ vim.opt.isfname:append("@-@")
 -- Setup lazy.nvim
 require("lazy").setup({
     "nvim-lua/plenary.nvim",
-	{
-		"rose-pine/neovim",
-		name = "rose-pine",
-		config = function()
-			vim.cmd("colorscheme rose-pine")
-		end
-	},	
-	{
-        	"nvim-telescope/telescope.nvim",
-            config = function()
-                require('telescope').setup({})
-                local builtin = require('telescope.builtin')
-                vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
-                vim.keymap.set('n', '<leader>pg', builtin.git_files, {})
-                vim.keymap.set('n', '<leader>ps', function()
-                    builtin.grep_string({ search = vim.fn.input("Grep > ") })
-                end)
-            end,
-	},
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-	},
-	"nvim-treesitter/playground",
+    {
+        "rose-pine/neovim",
+        name = "rose-pine",
+        config = function()
+            vim.cmd("colorscheme rose-pine")
+        end
+    },	
+    {
+        "nvim-telescope/telescope.nvim",
+        config = function()
+            require('telescope').setup({})
+            local builtin = require('telescope.builtin')
+            vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
+            vim.keymap.set('n', '<leader>pg', builtin.git_files, {})
+            vim.keymap.set('n', '<leader>ps', function()
+                builtin.grep_string({ search = vim.fn.input("Grep > ") })
+            end)
+        end,
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+    },
+    "nvim-treesitter/playground",
     {
         "theprimeagen/harpoon",
         config = function()
@@ -98,12 +98,33 @@ require("lazy").setup({
     {
         "folke/trouble.nvim",
         config = function()
-            require("trouble").setup {
-                icons = false,
-            }
-        end
+            require("trouble").setup({ icons = false })
+            vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>",
+            {silent = true, noremap = true}
+            )
+            vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",
+            {silent = true, noremap = true}
+            )
+            vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",
+            {silent = true, noremap = true}
+            )
+            vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>",
+            {silent = true, noremap = true}
+            )
+            vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
+            {silent = true, noremap = true}
+            )
+            vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>",
+            {silent = true, noremap = true}
+            )
+        end,
     },
-    "mbbill/undotree",
+    {
+        "mbbill/undotree",
+        config = function()
+            vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+        end
+    }
 
     --"zenmode/folke"
     --"github-copilot"
